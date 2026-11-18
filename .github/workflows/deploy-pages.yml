@@ -26,7 +26,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:
-          version: 12.18.0
+          # the committed lockfile is written by pnpm 10; CI installs with
+          # the same version and skips the packageManager-field self-switch
+          version: 10.14.0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -34,7 +36,7 @@ jobs:
           cache-dependency-path: projects/panacea/web/pnpm-lock.yaml
       - name: Install dependencies
         working-directory: projects/panacea/web
-        run: pnpm install --frozen-lockfile
+        run: pnpm --config.manage-package-manager-versions=false install --frozen-lockfile
       - name: Build (static export)
         working-directory: projects/panacea/web
         env:
